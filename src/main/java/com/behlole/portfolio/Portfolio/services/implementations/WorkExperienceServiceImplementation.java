@@ -5,10 +5,14 @@ import com.behlole.portfolio.Portfolio.exceptions.ResourceNotFoundException;
 import com.behlole.portfolio.Portfolio.payloads.WorkExperienceDTO;
 import com.behlole.portfolio.Portfolio.repositories.WorkExperienceRepo;
 import com.behlole.portfolio.Portfolio.services.WorkExperienceService;
+import org.hibernate.cfg.Environment;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Service
@@ -17,6 +21,8 @@ public class WorkExperienceServiceImplementation implements WorkExperienceServic
     ModelMapper modelMapper;
     @Autowired
     WorkExperienceRepo workExperienceRepo;
+    @Value("${server.port}")
+    String port;
 
     @Override
     public WorkExperienceDTO createWorkExperience(WorkExperienceDTO workExperienceDTO) {
@@ -27,7 +33,19 @@ public class WorkExperienceServiceImplementation implements WorkExperienceServic
     @Override
     public List<WorkExperienceDTO> getWorkExperiences() {
         List<WorkExperience> workExperiences = this.workExperienceRepo.findAll();
-        return workExperiences.stream().map(workExperience -> this.modelMapper.map(workExperience, WorkExperienceDTO.class)).toList();
+        return workExperiences.stream().map(workExperience -> {
+                    try {
+                        workExperience.setCompanyIcon(
+                                InetAddress.getLocalHost().getHostAddress() + ":" + port +
+                                        "/images/" +
+                                        workExperience.getCompanyIcon()
+                        );
+                    } catch (UnknownHostException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return this.modelMapper.map(workExperience, WorkExperienceDTO.class);
+                }
+        ).toList();
     }
 
     @Override
