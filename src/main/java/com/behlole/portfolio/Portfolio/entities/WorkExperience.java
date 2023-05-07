@@ -25,6 +25,6 @@ public class WorkExperience {
     private String companyIcon;
     @ElementCollection
     @CollectionTable(name = "points")
-    @Column(name = "point")
+    @Column(name = "point", length = 3000)
     private List<String> points = new ArrayList<>();
 }
