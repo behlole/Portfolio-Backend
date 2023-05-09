@@ -5,7 +5,6 @@ import com.behlole.portfolio.Portfolio.exceptions.ResourceNotFoundException;
 import com.behlole.portfolio.Portfolio.payloads.WorkExperienceDTO;
 import com.behlole.portfolio.Portfolio.repositories.WorkExperienceRepo;
 import com.behlole.portfolio.Portfolio.services.WorkExperienceService;
-import org.hibernate.cfg.Environment;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
